@@ -14,17 +14,17 @@ Web Phòng Trọ là một ứng dụng web quản lý phòng trọ, giúp ngư�
 ## Tính Năng
 
 ### Trang Chủ
-![Trang Chủ](../templates/trachu.png)
-![Trang Chủ](../templates/trangchu.png)
+![Trang Chủ](trachu.png)
+![Trang Chủ](trangchu.png)
 
 ### Quản Lý Phòng Trọ
-![Quản Lý Phòng Trọ](../template/QuanLyPhongTro.png)
+![Quản Lý Phòng Trọ](QuanLyPhongTro.png)
 
 ### Quản Lý Hợp Đồng
-![Quản Lý Hợp Đồng](../template/QuanLyHopDong.png)
+![Quản Lý Hợp Đồng](QuanLyHopDong.png)
 
 ### Quản Lý người thuê
-![Quản Lý Dịch Vụ](../template/QuanLyNguoiDung.png)
+![Quản Lý Dịch Vụ](QuanLyNguoiDung.png)
 
 ## Công Nghệ Sử Dụng
 
@@ -44,7 +44,7 @@ Web Phòng Trọ là một ứng dụng web quản lý phòng trọ, giúp ngư�
 1. **Clone repository:**
 
     ```bash
-    git clone https://github.com/your-username/web-phong-tro.git
+    git clone https://github.com/ireone01/Quan_Ly_Phong_Tro
     cd web-phong-tro
     ```
 
