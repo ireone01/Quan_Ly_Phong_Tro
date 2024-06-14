@@ -1,0 +1,297 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0">
+	<title>Customer</title>
+	<link rel="shortcut icon" type="image/x-icon" href="../assets/img/1.png">
+	<link rel="stylesheet" href="../assets/css/bootstrap.min.css">
+	<link rel="stylesheet" href="../assets/plugins/fontawesome/css/fontawesome.min.css">
+	<link rel="stylesheet" href="../assets/plugins/fontawesome/css/all.min.css">
+	<link rel="stylesheet" href="../assets/plugins/datatables/datatables.min.css">
+	<link rel="stylesheet" href="../assets/css/feathericon.min.css">
+	<link rel="stylesheet" href="../assets/plugins/morris/morris.css">
+	<link rel="stylesheet" href="../assets/css/style.css"> </head>
+
+<body>
+<div class="main-wrapper">
+	<div class="header">
+		<div class="header-left">
+			<a href="../templates/AD_dashbroard.html" class="logo"> <img src="../assets/img/1.png" width="50" height="70" alt="logo"> <span class="logoclass">ADMIN</span> </a>
+			<a href="../templates/AD_dashbroard.html" class="logo logo-small"> <img src="../assets/img/1.png" alt="Logo" width="30" height="30"> </a>
+		</div>
+		<a href="javascript:void(0);" id="toggle_btn"> <i class="fe fe-text-align-left"></i> </a>
+		<ul class="nav user-menu">
+
+			<li class="nav-item dropdown has-arrow">
+				<a href="#" class="dropdown-toggle nav-link" data-toggle="dropdown"> <span class="user-img"><img class="rounded-circle" src="../assets/img/1.png" width="31" alt="HAHAHA"></span> </a>
+				<div class="dropdown-menu">
+					<div class="user-header">
+						<div class="avatar avatar-sm"> <img src="../assets/img/1.png" alt="User Image" class="avatar-img rounded-circle"> </div>
+						<div class="user-text">
+							<h6 id="user-name-display">ADMIN</h6>
+							<p class="text-muted mb-0">ADMIN</p>
+						</div>
+					</div>
+					<a class="dropdown-item" href="#" onclick="logout()">Đăng Xuất</a>
+
+				</div>
+			</li>
+		</ul>
+	</div>
+	<div class="sidebar" id="sidebar">
+		<!-- Sidebar content will be loaded here -->
+	</div>
+	<div class="page-wrapper">
+		<div class="content container-fluid">
+			<div class="page-header">
+				<div class="row align-items-center">
+					<div class="col">
+						<div class="mt-5">
+							<h4 class="card-title float-left mt-2">Người Thuê</h4>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-sm-12">
+					<div class="card card-table">
+						<div class="card-body booking_card">
+							<div class="table-responsive">
+								<table class="datatable table table-stripped table-hover table-center mb-0">
+									<thead>
+									<tr>
+										<th>ID</th>
+										<th>Họ Tên</th>
+										<th>Giới Tính</th>
+										<th>Ngày Sinh</th>
+										<th>Số Điện Thoại</th>
+										<th>Địa Chỉ</th>
+										<th>Trạng Thái</th>
+										<th class="text-right">Thêm</th>
+									</tr>
+									</thead>
+									<tbody id="khach-hang-table-body">
+									<!-- Dữ liệu sẽ được chèn vào đây -->
+									</tbody>
+								</table>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- Modal xóa khách hàng -->
+		<div class="modal fade" id="delete_asset" tabindex="-1" role="dialog" aria-labelledby="deleteAssetLabel" aria-hidden="true">
+			<div class="modal-dialog" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title" id="deleteAssetLabel">Xóa Người Dùng</h5>
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+					</div>
+					<div class="modal-body">
+						Bạn có chắc chắn muốn xóa người dùng này?
+						<input type="hidden" id="delete-customer-id">
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+						<button type="button" class="btn btn-danger" id="confirm-delete">Xóa</button>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- Modal xem chi tiết khách hàng -->
+		<div class="modal fade" id="customerModal" tabindex="-1" role="dialog" aria-labelledby="customerModalLabel" aria-hidden="true">
+			<div class="modal-dialog" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title" id="customerModalLabel">Chi Tiết Người Thuê</h5>
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+					</div>
+					<div class="modal-body">
+						<p><strong>ID Khách Hàng:</strong> <span id="modal-ID_KhachHang"></span></p>
+						<p><strong>Tên Khách Hàng:</strong> <span id="modal-TenKhachHang"></span></p>
+						<p><strong>Giới Tính:</strong> <span id="modal-GioiTinh"></span></p>
+						<p><strong>Ngày Sinh:</strong> <span id="modal-NgaySinh"></span></p>
+						<p><strong>Số Điện Thoại:</strong> <span id="modal-SoDienThoai"></span></p>
+						<p><strong>Địa Chỉ:</strong> <span id="modal-DiaChi"></span></p>
+						<p><strong>Trạng Thái Thuê Phòng:</strong> <span id="modal-DaThuePhong"></span></p>
+						<p><strong>Tên Đăng Nhập:</strong> <span id="modal-TenDangNhap"></span></p>
+						<p><strong>Email:</strong> <span id="modal-Email"></span></p>
+						<p><strong>Số Phòng:</strong> <span id="modal-SoPhong"></span></p>
+						<p><strong>Ngày Tạo:</strong> <span id="modal-NgayTao"></span></p>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<script src="../assets/js/jquery-3.5.1.min.js"></script>
+<script src="../assets/js/popper.min.js"></script>
+<script src="../assets/js/bootstrap.min.js"></script>
+<script src="../assets/plugins/datatables/jquery.dataTables.min.js"></script>
+<script src="../assets/plugins/datatables/datatables.min.js"></script>
+<script src="../assets/plugins/slimscroll/jquery.slimscroll.min.js"></script>
+<script src="../assets/plugins/raphael/raphael.min.js"></script>
+<script src="../assets/js/script.js"></script>
+
+<script>
+	function loadData() {
+		fetch('http://localhost:3001/KhachHang') // Đảm bảo URL này đúng với endpoint API của bạn
+				.then(response => response.json())
+				.then(data => {
+					const tableBody = document.getElementById('khach-hang-table-body');
+					tableBody.innerHTML = ''; // Xóa nội dung cũ trước khi thêm nội dung mới
+
+					data.forEach(kh => {
+						if (!kh.VaiTro) {
+							const row = document.createElement('tr');
+
+							row.innerHTML = `
+                                <td>${kh.ID_KhachHang}</td>
+                                <td>${kh.TenKhachHang}</td>
+                                <td>${kh.GioiTinh}</td>
+                                <td>${new Date(kh.NgaySinh).toLocaleDateString()}</td>
+                                <td>${kh.SoDienThoai}</td>
+                                <td>${kh.DiaChi}</td>
+                                <td>
+                                    <div class="actions">
+                                        <a href="#" class="btn btn-sm bg-success-light mr-2">${kh.DaThuePhong ? 'Đã thuê' : 'Chưa thuê'}</a>
+                                    </div>
+                                </td>
+                                <td class="text-right">
+                                    <div class="dropdown dropdown-action">
+                                        <a href="#" class="action-icon dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i class="fas fa-ellipsis-v ellipse_color"></i></a>
+                                        <div class="dropdown-menu dropdown-menu-right">
+                                            <a class="dropdown-item view-customer-details" data-customer-id="${kh.ID_KhachHang}" data-toggle="modal" data-target="#customerModal">
+                                                <i class="fas fa-user-alt m-r-5"></i> Xem Chi Tiết Người Thuê
+                                            </a>
+                                            <a class="dropdown-item delete-customer" href="#" data-customer-id="${kh.ID_KhachHang}" data-toggle="modal" data-target="#delete_asset">
+                                                <i class="fas fa-trash-alt m-r-5"></i> Xóa Người Dùng
+                                            </a>
+                                        </div>
+                                    </div>
+                                </td>
+                            `;
+
+							tableBody.appendChild(row);
+
+							// Gắn sự kiện click cho nút Xem Chi Tiết Người Thuê
+							row.querySelector('.view-customer-details').addEventListener('click', function () {
+								document.getElementById('modal-ID_KhachHang').innerText = kh.ID_KhachHang;
+								document.getElementById('modal-TenKhachHang').innerText = kh.TenKhachHang;
+								document.getElementById('modal-GioiTinh').innerText = kh.GioiTinh;
+								document.getElementById('modal-NgaySinh').innerText = new Date(kh.NgaySinh).toLocaleDateString();
+								document.getElementById('modal-SoDienThoai').innerText = kh.SoDienThoai;
+								document.getElementById('modal-DiaChi').innerText = kh.DiaChi;
+								document.getElementById('modal-DaThuePhong').innerText = kh.DaThuePhong ? 'Đã thuê' : 'Chưa thuê';
+								document.getElementById('modal-Email').innerText = kh.Email;
+								document.getElementById('modal-TenDangNhap').innerText = kh.TenDangNhap;
+								document.getElementById('modal-SoPhong').innerText = kh.SoPhong ? kh.SoPhong : 'Chưa thuê phòng';
+								document.getElementById('modal-NgayTao').innerText = new Date(kh.NgayTao).toLocaleDateString();
+							});
+
+							// Gắn sự kiện click cho nút Xóa Người Dùng
+							row.querySelector('.delete-customer').addEventListener('click', function () {
+								document.getElementById('delete-customer-id').value = kh.ID_KhachHang;
+							});
+						}
+					});
+
+					document.getElementById('confirm-delete').addEventListener('click', function () {
+						const customerId = document.getElementById('delete-customer-id').value;
+
+						// Gửi yêu cầu xóa đến server
+						fetch(`http://localhost:3001/KhachHang/${customerId}`, {
+							method: 'DELETE'
+						})
+								.then(response => {
+									if (response.ok) {
+										alert('Xoá thành công');
+										// Xóa hàng tương ứng khỏi bảng
+										loadData(); // Tải lại dữ liệu sau khi xóa
+
+										// Ẩn modal
+										$('#delete_asset').modal('hide');
+									} else {
+										console.error('Error deleting customer:', response.statusText);
+									}
+								})
+								.catch(error => console.error('Error deleting customer:', error));
+					});
+				})
+				.catch(error => console.error('Error fetching data:', error));
+	}
+
+	document.addEventListener('DOMContentLoaded', loadData);
+
+	function checkLogin() {
+		fetch('http://localhost:3001/userinfo', {
+			credentials: 'include'
+		})
+				.then(response => {
+					if (response.ok) {
+						return response.json();
+					} else {
+						window.location.href = '../templates/login1.html';
+					}
+				})
+				.then(user => {
+					document.getElementById('user-name-display').textContent=user.TenKhachHang;
+					fetchInvoices(user.ID_KhachHang); // Fetch invoices after login
+				})
+				.catch(error => {
+					console.error('Lỗi khi kiểm tra đăng nhập:', error);
+				});
+	}
+
+	async function logout() {
+		try {
+			const response = await fetch('http://localhost:3001/logout', {
+				method: 'POST',
+				credentials : 'include'
+			});
+			if (response.ok) {
+				window.location.reload();
+			} else {
+				alert('Đăng xuất thất bại');
+			}
+		} catch (error) {
+			console.error('Lỗi khi đăng xuất:', error);
+			alert('Đã xảy ra lỗi khi đăng xuất');
+		}
+	}
+	checkLogin();
+</script>
+
+<script>
+
+	$(document).ready(function () {
+		$('#sidebar').load('../templates/sidebar.html', function () {
+			// Gắn lại các sự kiện sau khi nội dung được tải xong
+			$('.submenu > a').on('click', function (e) {
+				e.preventDefault();
+				var submenu = $(this).next('.submenu_class');
+				if (submenu.is(':visible')) {
+					submenu.slideUp();
+				} else {
+					submenu.slideDown();
+				}
+			});
+		});
+	});
+</script>
+</body>
+
+</html>

@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Đăng nhập</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            background-color: #f7f7f7;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .login-container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 400px;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .btn-block {
+            width: 100%;
+        }
+    </style>
+</head>
+
+<body>
+<div class="login-container">
+    <h1>Đăng nhập</h1>
+    <form id="login-form">
+        <div class="form-group">
+            <label for="TenDangNhap">Tên Đăng Nhập:</label>
+            <input type="text" id="TenDangNhap" name="TenDangNhap" class="form-control" required>
+        </div>
+        <div class="form-group">
+            <label for="MatKhau">Mật Khẩu:</label>
+            <input type="password" id="MatKhau" name="MatKhau" class="form-control" required>
+        </div>
+        <button type="submit" class="btn btn-primary btn-block">Đăng nhập</button>
+    </form>
+</div>
+
+<script>
+    document.getElementById('login-form').addEventListener('submit', async function(event) {
+        event.preventDefault();
+
+        const formData = new FormData(event.target);
+        const data = Object.fromEntries(formData.entries());
+
+        try {
+            const response = await fetch('http://localhost:3001/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data),
+                credentials: 'include'
+            });
+
+            const result = await response.json();
+            if (response.ok) {
+                alert('Đăng nhập thành công');
+                if (result.vaitro === 1) {
+                    window.location.href = '../templates/AD_dashbroard.html';
+                } else {
+                    window.location.href = '../templates/CUS_room.html';
+                }
+            } else {
+                alert(`Đăng nhập thất bại: ${result}`);
+            }
+        } catch (error) {
+            console.error('Lỗi khi đăng nhập:', error);
+            alert('Đã xảy ra lỗi khi đăng nhập');
+        }
+    });
+</script>
+</body>
+
+</html>

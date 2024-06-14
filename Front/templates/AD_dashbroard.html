@@ -1,0 +1,106 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0">
+    <title>ADMIN</title>
+    <link rel="shortcut icon" type="image/x-icon" href="../assets/img/1.png">
+    <link rel="stylesheet" href="../assets/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../assets/plugins/fontawesome/css/fontawesome.min.css">
+    <link rel="stylesheet" href="../assets/plugins/fontawesome/css/all.min.css">
+    <link rel="stylesheet" href="../assets/css/feathericon.min.css">
+    <link rel="stylesheet" href="https://cdn.oesmith.co.uk/morris-0.5.1.css">
+    <link rel="stylesheet" href="../assets/plugins/morris/morris.css">
+    <link rel="stylesheet" href="../assets/css/style.css">
+</head>
+
+<body>
+<div class="main-wrapper">
+    <div class="header">
+        <div class="header-left">
+            <a href="../templates/AD_dashbroard.html" class="logo"> <img src="../assets/img/1.png" width="50" height="70" alt="logo"> <span class="logoclass">ADMIN</span> </a>
+            <a href="../templates/AD_dashbroard.html" class="logo logo-small"> <img src="../assets/img/1.png" alt="Logo" width="30" height="30"> </a>
+        </div>
+        <a href="javascript:void(0);" id="toggle_btn"> <i class="fe fe-text-align-left"></i> </a>
+        <ul class="nav user-menu">
+
+            <li class="nav-item dropdown has-arrow">
+                <a href="#" class="dropdown-toggle nav-link" data-toggle="dropdown"> <span class="user-img"><img class="rounded-circle" src="../assets/img/1.png" width="31" alt="HAHAHA"></span> </a>
+                <div class="dropdown-menu">
+                    <div class="user-header">
+                        <div class="avatar avatar-sm"> <img src="../assets/img/1.png" alt="User Image" class="avatar-img rounded-circle"> </div>
+                        <div class="user-text">
+                            <h6 id="user-name-display">ADMIN</h6>
+                            <p class="text-muted mb-0">ADMIN</p>
+                        </div>
+                    </div>
+                    <a class="dropdown-item" href="#" onclick="logout()">Đăng Xuất</a>
+
+                </div>
+            </li>
+        </ul>
+    </div>
+    <div class="sidebar" id="sidebar">
+
+    </div>
+    <div class="page-wrapper">
+        <div class="content container-fluid">
+            <div class="page-header">
+                <div class="row">
+                    <div class="col-sm-12 mt-5">
+                        <h3 class="page-title mt-3">Hello!</h3>
+                        <ul class="breadcrumb">
+                            <li class="breadcrumb-item active">Dashboard</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <!-- kết nối với dashboard  -->
+            <div class="row">
+                <div class="col-12">
+                    <iframe id="dashboard-iframe" src="http://127.0.0.1:8050/" style="width: 100%; height: 120vh; border: none;"></iframe>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script data-cfasync="false" src="../../../cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script>
+<script src="../assets/js/jquery-3.5.1.min.js"></script>
+<script src="../assets/js/popper.min.js"></script>
+<script src="../assets/js/bootstrap.min.js"></script>
+<script src="../assets/plugins/slimscroll/jquery.slimscroll.min.js"></script>
+<script src="../assets/plugins/raphael/raphael.min.js"></script>
+<script src="../assets/plugins/morris/morris.min.js"></script>
+<script src="../assets/js/chart.morris.js"></script>
+<script src="../assets/js/script.js"></script>
+<script>
+    setInterval(function (){
+        fetch('http://127.0.0.1:8050/')
+            .then(response => response.json())
+            .then(data =>{
+                var iframe =document.getElementById('dashboard-iframe');
+                iframe.contentWindow.postMessage(data,'http://127.0.0.1:8050/');
+            })
+
+    },3000);
+</script>
+<script>
+    $(document).ready(function() {
+        $('#sidebar').load('../templates/sidebar.html', function() {
+            // Gắn lại các sự kiện sau khi nội dung được tải xong
+            $('.submenu > a').on('click', function(e) {
+                e.preventDefault();
+                var submenu = $(this).next('.submenu_class');
+                if (submenu.is(':visible')) {
+                    submenu.slideUp();
+                } else {
+                    submenu.slideDown();
+                }
+            });
+        });
+    });
+</script>
+</body>
+
+</html>

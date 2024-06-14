@@ -1,0 +1,230 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0">
+	<title>ADMIN</title>
+	<link rel="shortcut icon" type="image/x-icon" href="../assets/img/1.png">
+	<link rel="stylesheet" href="../assets/css/bootstrap.min.css">
+	<link rel="stylesheet" href="../assets/plugins/fontawesome/css/fontawesome.min.css">
+	<link rel="stylesheet" href="../assets/plugins/fontawesome/css/all.min.css">
+	<link rel="stylesheet" href="../assets/plugins/datatables/datatables.min.css">
+	<link rel="stylesheet" href="../assets/css/feathericon.min.css">
+	<link rel="stylesheet" href="../assets/plugins/morris/morris.css">
+	<link rel="stylesheet" href="../assets/css/style.css">
+</head>
+
+<body>
+<div class="main-wrapper">
+	<div class="header">
+		<div class="header-left">
+			<a href="../templates/AD_dashbroard.html" class="logo"> <img src="../assets/img/1.png" width="50" height="70" alt="logo"> <span class="logoclass">ADMIN</span> </a>
+			<a href="../templates/AD_dashbroard.html" class="logo logo-small"> <img src="../assets/img/1.png" alt="Logo" width="30" height="30"> </a>
+		</div>
+		<a href="javascript:void(0);" id="toggle_btn"> <i class="fe fe-text-align-left"></i> </a>
+		<ul class="nav user-menu">
+
+			<li class="nav-item dropdown has-arrow">
+				<a href="#" class="dropdown-toggle nav-link" data-toggle="dropdown"> <span class="user-img"><img class="rounded-circle" src="../assets/img/1.png" width="31" alt="HAHAHA"></span> </a>
+				<div class="dropdown-menu">
+					<div class="user-header">
+						<div class="avatar avatar-sm"> <img src="../assets/img/1.png" alt="User Image" class="avatar-img rounded-circle"> </div>
+						<div class="user-text">
+							<h6 id="user-name-display">ADMIN</h6>
+							<p class="text-muted mb-0">ADMIN</p>
+						</div>
+					</div>
+					<a class="dropdown-item" href="#" onclick="logout()">Đăng Xuất</a>
+
+				</div>
+			</li>
+		</ul>
+	</div>
+	<div class="sidebar" id="sidebar">
+
+	</div>
+	<div class="page-wrapper">
+		<div class="content container-fluid">
+			<div class="page-header">
+				<div class="row align-items-center">
+					<div class="col">
+						<div class="mt-5">
+							<h4 class="card-title float-left mt-2">Dịch Vụ</h4> </div> <a href="{{ url_for('add_service') }}" class="btn btn-primary float-right veiwbutton">Thêm Dịch Vụ</a> </div>
+				</div>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-sm-12">
+				<div class="card card-table">
+					<div class="card-body booking_card">
+						<div class="table-responsive">
+							<table class="datatable table table-stripped table table-hover table-center mb-0">
+								<thead>
+								<tr>
+									<th>ID</th>
+									<th class="text-center">Tên Dịch Vụ</th>
+									<th class="text-center">Giá Dịch Vụ</th>
+									<th class="text-right">Thêm</th>
+								</tr>
+								</thead>
+								<tbody id="service-list">
+								<!-- Dynamic service data will be inserted here -->
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div id="delete_asset" class="modal fade delete-modal" role="dialog">
+		<div class="modal-dialog modal-dialog-centered">
+			<div class="modal-content">
+				<div class="modal-body text-center">
+					<img src="../assets/img/sent.png" alt="" width="50" height="46">
+					<h3 class="delete_class">Bạn có muốn xóa Dịch Vụ không?</h3>
+					<div class="m-t-20 d-flex justify-content-center">
+						<a href="#" class="btn btn-white mr-2" data-dismiss="modal">Không</a>
+						<form method="POST" action="/delete_service" id="deleteForm">
+							<input type="hidden" name="id" id="deleteServiceId">
+							<button type="submit" class="btn btn-danger ml-2">Có</button>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+</div>
+<script src="../assets/js/jquery-3.5.1.min.js"></script>
+<script src="../assets/js/popper.min.js"></script>
+<script src="../assets/js/bootstrap.min.js"></script>
+<script src="../assets/plugins/datatables/jquery.dataTables.min.js"></script>
+<script src="../assets/plugins/datatables/datatables.min.js"></script>
+<script src="../assets/plugins/slimscroll/jquery.slimscroll.min.js"></script>
+<script src="../assets/plugins/raphael/raphael.min.js"></script>
+<script src="../assets/js/script.js"></script>
+<script>
+	function checkLogin() {
+		fetch('http://localhost:3001/userinfo', {
+			credentials: 'include'
+		})
+				.then(response => {
+					if (response.ok) {
+						return response.json();
+					} else {
+						window.location.href = '../templates/login1.html';
+					}
+				})
+				.then(user => {
+					document.getElementById('user-name-display').textContent = user.TenKhachHang;
+					fetchServices(); // Fetch services after login
+				})
+				.catch(error => {
+					console.error('Lỗi khi kiểm tra đăng nhập:', error);
+				});
+	}
+
+	async function fetchServices() {
+		try {
+			const response = await fetch('http://localhost:3001/DichVu', {
+				credentials: 'include'
+			});
+			if (response.ok) {
+				const services = await response.json();
+				const serviceList = document.getElementById('service-list');
+				serviceList.innerHTML = '';
+				services.forEach(service => {
+					const row = document.createElement('tr');
+					row.innerHTML = `
+                            <td>${service.ID_DichVu}</td>
+                            <td class="text-center">${service.TenDichVu}</td>
+                            <td class="text-center">${service.GiaDichVu} đ</td>
+                            <td class="text-right">
+                                <div class="dropdown dropdown-action">
+                                    <a href="#" class="action-icon dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                                        <i class="fas fa-ellipsis-v ellipse_color"></i>
+                                    </a>
+                                    <div class="dropdown-menu dropdown-menu-right">
+                                        <a class="dropdown-item" href="edit_service.html?id=${service.ID_DichVu}">
+                                            <i class="fas fa-pencil-alt m-r-5"></i> Sửa Dịch Vụ
+                                        </a>
+                                        <a class="dropdown-item delete-service" href="#" data-service-id="${service.ID_DichVu}">
+                                            <i class="fas fa-trash-alt m-r-5"></i> Xóa Dịch Vụ
+                                        </a>
+                                    </div>
+                                </div>
+                            </td>
+                        `;
+					serviceList.appendChild(row);
+				});
+			} else {
+				throw new Error('Failed to fetch services');
+			}
+		} catch (error) {
+			console.error('Lỗi khi lấy dịch vụ:', error);
+		}
+	}
+
+	async function logout() {
+		try {
+			const response = await fetch('http://localhost:3001/logout', {
+				method: 'POST',
+				credentials: 'include'
+			});
+			if (response.ok) {
+				window.location.reload();
+			} else {
+				alert('Đăng xuất thất bại');
+			}
+		} catch (error) {
+			console.error('Lỗi khi đăng xuất:', error);
+			alert('Đã xảy ra lỗi khi đăng xuất');
+		}
+	}
+
+	$(document).ready(function() {
+		checkLogin();
+
+		$(document).on('click', '.delete-service', function(){
+			var serviceId = $(this).data('service-id');
+			$("#deleteServiceId").val(serviceId);
+			$("#delete_asset").modal('show');
+		});
+
+		$("#deleteForm").submit(function(event){
+			event.preventDefault();
+			$.ajax({
+				url: $(this).attr('action'),
+				type: 'POST',
+				data: $(this).serialize(),
+				success: function(response){
+					if(response.success === false){
+						alert(response.message);
+					} else {
+						location.reload();
+					}
+				},
+				error: function(xhr, status, error){
+					alert('An error occurred: ' + error);
+				}
+			});
+		});
+
+		$('#sidebar').load('../templates/sidebar.html', function() {
+			$('.submenu > a').on('click', function(e) {
+				e.preventDefault();
+				var submenu = $(this).next('.submenu_class');
+				if (submenu.is(':visible')) {
+					submenu.slideUp();
+				} else {
+					submenu.slideDown();
+				}
+			});
+		});
+	});
+</script>
+</body>
+
+</html>

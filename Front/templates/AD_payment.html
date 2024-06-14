@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0">
+	<title>ADMIN</title>
+	<link rel="shortcut icon" type="image/x-icon" href="../assets/img/1.png">
+
+	<link rel="stylesheet" href="../assets/css/bootstrap.min.css">
+
+	<link rel="stylesheet" href="../assets/plugins/fontawesome/css/fontawesome.min.css">
+	<link rel="stylesheet" type="text/css" href="../assets/plugins/fontawesome/css/all.min.css">
+
+	<link rel="stylesheet" href="../assets/css/feathericon.min.css">
+
+	<link rel="stylesheet" href="../assets/plugins/datatables/datatables.min.css">
+	<link rel="stylesheet" href="../assets/plugins/morris/morris.css">
+	<link rel="stylesheet" type="text/css" href="../assets/css/bootstrap-datetimepicker.min.css">
+
+	<link rel="stylesheet" href="../assets/css/style.css">
+
+</head>
+
+<body>
+
+	<div class="main-wrapper">
+		<div class="header">
+			<div class="header-left">
+				<a href="../templates/AD_dashbroard.html" class="logo"> <img src="../assets/img/1.png" width="50" height="70" alt="logo"> <span class="logoclass">ADMIN</span> </a>
+				<a href="../templates/AD_dashbroard.html" class="logo logo-small"> <img src="../assets/img/1.png" alt="Logo" width="30" height="30"> </a>
+			</div>
+			<a href="javascript:void(0);" id="toggle_btn"> <i class="fe fe-text-align-left"></i> </a>
+			<ul class="nav user-menu">
+
+				<li class="nav-item dropdown has-arrow">
+					<a href="#" class="dropdown-toggle nav-link" data-toggle="dropdown"> <span class="user-img"><img class="rounded-circle" src="../assets/img/1.png" width="31" alt="HAHAHA"></span> </a>
+					<div class="dropdown-menu">
+						<div class="user-header">
+							<div class="avatar avatar-sm"> <img src="../assets/img/1.png" alt="User Image" class="avatar-img rounded-circle"> </div>
+							<div class="user-text">
+								<h6 id="user-name-display">ADMIN</h6>
+								<p class="text-muted mb-0">ADMIN</p>
+							</div>
+						</div>
+						<a class="dropdown-item" href="#" onclick="logout()">Đăng Xuất</a>
+
+					</div>
+				</li>
+			</ul>
+		</div>
+		<div class="sidebar" id="sidebar">
+
+        </div>
+
+
+		<div class="page-wrapper">
+			<div class="content container-fluid">
+				<div class="page-header">
+					<div class="row align-items-center">
+						<div class="col">
+							<div class="mt-5">
+								<h4 class="card-title float-left mt-2">Thanh Toán</h4>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-sm-12">
+						<div class="card card-table">
+							<div class="card-body booking_card">
+								<div class="table-responsive">
+									<table class="datatable table table-stripped table-hover table-center mb-0">
+										<thead>
+											<tr>
+												<th>ID</th>
+												<th>ID Hóa Đơn</th>
+												<th>Ngày Thanh Toán</th>
+												<th>Số Tiền</th>
+												<th>Phương Thức</th>
+												<th>Số Tiền Còn Lại</th>
+												<th>Thêm</th>
+											</tr>
+										</thead>
+										<tbody>
+											{% for tt in thanh_toan %}
+											<tr>
+												<td>{{ tt.ID_HoaDon }}</td>
+												<td><a href="#" class="view-bill-details" data-toggle="modal" data-target="#billModal" data-bill-id="{{ tt.ID_HoaDon }}">{{ tt.ID_HoaDon }}</a></td>
+												<td>{{ tt.NgayThanhToan }}</td>
+												<td>{{ tt.SoTien }}</td>
+												<td>{{ tt.PhuongThuc }}</td>
+												<td>{{ tt.SoTienConLai }}</td>
+												<td>
+													<div class="dropdown dropdown-action">
+														<a href="#" class="action-icon dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+															<i class="fas fa-ellipsis-v ellipse_color"></i>
+														</a>
+														<div class="dropdown-menu dropdown-menu-right">
+															<a class="dropdown-item delete-payment" href="#" data-toggle="modal" data-target="#delete_asset" data-payment-id="{{ tt.ID_ThanhToan }}">
+																<i class="fas fa-trash-alt m-r-5"></i> Xóa Hóa Đơn
+															</a>
+														</div>
+													</div>
+												</td>
+											</tr>
+											{% endfor %}
+										</tbody>
+									</table>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+	
+			<div class="modal fade" id="billModal" tabindex="-1" role="dialog" aria-labelledby="billModalLabel" aria-hidden="true">
+				<div class="modal-dialog modal-lg" role="document">
+					<div class="modal-content">
+						<div class="modal-header">
+							<h5 class="modal-title" id="billModalLabel">Chi Tiết Thanh Toán</h5>
+							<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+								<span aria-hidden="true">&times;</span>
+							</button>
+						</div>
+						<div class="modal-body1">
+							<div class="tab-content profile-tab-cont">
+								<div class="tab-pane fade show active">
+									<div class="row">
+										<div class="col-lg-12">
+											<div class="card">
+												<div class="card-body">
+													<div class="row mt-4">
+														<div class="col-sm-12">
+															<table class="table">
+																<tr>
+																	<td class="text-center"><b>ID:</b></td>
+																	<td id="ID_HoaDon"></td>
+																</tr>
+																<tr>
+																	<td class="text-center"><b>ID Hợp Đồng:</b></td>
+																	<td id="ID_HopDong"></td>
+																</tr>
+																<tr>
+																	<td class="text-center"><b>ID Phòng:</b></td>
+																	<td id="ID_Phong"></td>
+																</tr>
+																<tr>
+																	<td class="text-align"><b>Ngày Tạo:</b></td>
+																	<td id="NgayTao"></td>
+																</tr>
+																<tr>
+																	<td class="text-align"><b>Tháng Năm:</b></td>
+																	<td id="ThangNam"></td>
+																</tr>
+																<tr>
+																	<td class="text-align"><b>Số Tiền:</b></td>
+																	<td id="SoTien"></td>
+																</tr>
+																<tr>
+																	<td class="text-align"><b>Trạng Thái Thanh Toán:</b></td>
+																	<td id="TrangThaiThanhToan"></td>
+																</tr>
+																<tr>
+																	<td class="text-align"><b>Chi Tiết Dịch Vụ:</b></td>
+																	<td id="ChiTietDichVu"></td>
+																</tr>
+																<tr>
+																	<td class="text-align"><b>ID Chi Tiết Dịch Vụ:</b></td>
+																	<td id="ID_ChiTietDichVu"></td>
+																</tr>
+																<tr>
+																	<td class="text-align"><b>Tổng Số Tiền:</b></td>
+																	<td id="TongSoTien"></td>
+																</tr>
+															</table>
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>	
+			<div id="delete_asset" class="modal fade delete-modal" role="dialog">
+				<div class="modal-dialog modal-dialog-centered">
+					<div class="modal-content">
+						<div class="modal-body text-center">
+							<img src="../assets/img/sent.png" alt="" width="50" height="46">
+							<h3 class="delete_class">Bạn có muốn xóa thanh toán không?</h3>
+							<div class="m-t-20 d-flex justify-content-center">
+								<a href="#" class="btn btn-white mr-2" data-dismiss="modal">Không</a>
+								<form method="POST" action="/delete_payment" id="deleteForm">
+									<input type="hidden" name="id" id="deletePaymentId">
+									<button type="submit" class="btn btn-danger ml-2">Có</button>
+								</form>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>	
+		</div>
+
+	</div>
+
+
+	<script src="../assets/js/jquery-3.5.1.min.js"></script>
+
+	<script src="../assets/js/popper.min.js"></script>
+	<script src="../assets/js/bootstrap.min.js"></script>
+	<script src="../assets/js/moment.min.js"></script>
+	<script src="../assets/js/select2.min.js"></script>
+
+	<script src="../assets/plugins/slimscroll/jquery.slimscroll.min.js"></script>
+
+	<script src="../assets/js/bootstrap-datetimepicker.min.js"></script>
+
+	<script src="../assets/plugins/datatables/datatables.min.js"></script>
+	<script src="../assets/js/script.js"></script>
+	<script>
+		$(document).on('click', '.view-bill-details', function(){
+			var billId = $(this).data('bill-id');
+			$.ajax({
+				url: '/get_bill_details',
+				type: 'GET',
+				data: {id: billId},
+				success: function(response){
+					$('#ID_HoaDon').text(response.ID_HoaDon);
+					$('#ID_HopDong').text(response.ID_HopDong);
+					$('#ID_Phong').text(response.ID_Phong);
+					$('#NgayTao').text(response.NgayTao);
+					$('#ThangNam').text(response.ThangNam);
+					$('#SoTien').text(response.SoTien);
+					$('#TrangThaiThanhToan').text(response.TrangThaiThanhToan);
+					$('#ChiTietDichVu').text(response.ChiTietDichVu);
+					$('#ID_ChiTietDichVu').text(response.ID_ChiTietDichVu);
+					$('#TongSoTien').text(response.TongSoTien);
+
+					$('#billModal').modal('show');
+				}
+			});
+
+		});
+		$(document).on('click', '.delete-payment', function(){
+			var paymentId = $(this).data('payment-id');
+			$("#deletePaymentId").val(paymentId);
+			$("#delete_asset").modal('show');
+		});
+
+		// Handle form submission for deleting a service detail
+		$("#deleteForm").submit(function(event){
+			event.preventDefault();
+			$.ajax({
+				url: $(this).attr('action'),
+				type: 'POST',
+				data: $(this).serialize(),
+				success: function(response){
+					if(response.success === false){
+						alert(response.message);
+					} else {
+						location.reload();
+					}
+				},
+				error: function(xhr, status, error){
+					alert('An error occurred: ' + error);
+				}
+			});
+		});
+	</script>
+	<script>
+		$(document).ready(function() {
+			$('#sidebar').load('../templates/sidebar.html', function() {
+				// Gắn lại các sự kiện sau khi nội dung được tải xong
+				$('.submenu > a').on('click', function(e) {
+					e.preventDefault();
+					var submenu = $(this).next('.submenu_class');
+					if (submenu.is(':visible')) {
+						submenu.slideUp();
+					} else {
+						submenu.slideDown();
+					}
+				});
+			});
+		});
+	</script>
+</body>
+
+</html>
